@@ -11,11 +11,17 @@ npm install react-native-prefetch
 ## Usage
 
 ```js
-import { multiply } from 'react-native-prefetch';
+import { prefetch } from 'react-native-prefetch';
 
 // ...
 
-const result = await multiply(3, 7);
+// That returns fetch
+prefetch('MAIN_SYNC_KEY')(url, options?);
+// or
+prefetch('MAIN_SYNC_KEY', url, options?);
+// or 
+fetch(url, {headers:{__internalKey: "MAIN_SYNC_KEY"}});
+
 ```
 
 ## Contributing
