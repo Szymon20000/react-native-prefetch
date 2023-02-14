@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 import { multiply } from 'react-native-prefetch';
 
 export default function App() {
@@ -13,6 +13,14 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Result: {result}</Text>
+      <Button
+        title="fetch"
+        onPress={() => {
+          fetch('https://jsonplaceholder.typicode.com/todos/1', {headers: {trackingName: "sdfsdf"}})
+            .then((response) => response.json())
+            .then((json) => console.log(json));
+        }}
+      />
     </View>
   );
 }

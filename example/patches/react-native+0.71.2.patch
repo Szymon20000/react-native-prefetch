@@ -1,0 +1,30 @@
+diff --git a/node_modules/react-native/Libraries/Network/RCTNetworking.mm b/node_modules/react-native/Libraries/Network/RCTNetworking.mm
+index 24c1752..c96f2a2 100644
+--- a/node_modules/react-native/Libraries/Network/RCTNetworking.mm
++++ b/node_modules/react-native/Libraries/Network/RCTNetworking.mm
+@@ -699,7 +699,7 @@ - (RCTNetworkTask *)networkTaskWithRequest:(NSURLRequest *)request
+                   : (JS::NativeNetworkingIOS::SpecSendRequestQuery &)query callback
+                   : (RCTResponseSenderBlock)responseSender)
+ {
+-  NSDictionary *queryDict = @{
++  NSMutableDictionary *queryDict = [@{
+     @"method" : query.method(),
+     @"url" : query.url(),
+     @"data" : query.data(),
+@@ -708,7 +708,15 @@ - (RCTNetworkTask *)networkTaskWithRequest:(NSURLRequest *)request
+     @"incrementalUpdates" : @(query.incrementalUpdates()),
+     @"timeout" : @(query.timeout()),
+     @"withCredentials" : @(query.withCredentials()),
+-  };
++  } mutableCopy];
++    
++    NSString * key = [self extractKeyAndStrip:queryDict];
++    if (key != nil) {
++        [self memoiseQuery:queryDict underKey:key];
++        if ([self alreadyAsked:key]) {
++            [self resolveQuicker:key withCallback:responseSender];
++        }
++    }
+ 
+   // TODO: buildRequest returns a cancellation block, but there's currently
+   // no way to invoke it, if, for example the request is cancelled while

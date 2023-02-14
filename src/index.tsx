@@ -27,3 +27,19 @@ const Prefetch = PrefetchModule
 export function multiply(a: number, b: number): Promise<number> {
   return Prefetch.multiply(a, b);
 }
+
+export function prefetch(key: string) {
+  return async (...args: Parameters<typeof fetch>) => {
+    if (args[1] == null) {
+      args[1] = {};
+    }
+    if (args[1]?.headers == null) {
+      args[1].headers = {};
+    }
+
+    // @ts-ignore
+    args[1].headers.__internalKey = key;
+
+    return fetch(...args);
+  };
+}
